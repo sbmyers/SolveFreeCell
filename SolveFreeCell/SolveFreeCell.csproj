@@ -46,14 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="BitMapHash.cs" />
+    <Compile Include="Card.cs" />
+    <Compile Include="FreeCellSolver.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="FreeCellSolver.Designer.cs">
+      <DependentUpon>FreeCellSolver.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FreeCellSolver.resx">
+      <DependentUpon>FreeCellSolver.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -75,6 +81,69 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Outlook">
+      <Guid>{00062FFF-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>9</VersionMajor>
+      <VersionMinor>6</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\B2.bmp" />
+    <EmbeddedResource Include="Images\B3.bmp" />
+    <EmbeddedResource Include="Images\B4.bmp" />
+    <EmbeddedResource Include="Images\B5.bmp" />
+    <EmbeddedResource Include="Images\B7.bmp" />
+    <EmbeddedResource Include="Images\B8.bmp" />
+    <EmbeddedResource Include="Images\B9.bmp" />
+    <EmbeddedResource Include="Images\BA.bmp" />
+    <EmbeddedResource Include="Images\BJ.bmp" />
+    <EmbeddedResource Include="Images\BK.bmp" />
+    <EmbeddedResource Include="Images\BQ.bmp" />
+    <EmbeddedResource Include="Images\Clubs.bmp" />
+    <EmbeddedResource Include="Images\Diamonds.bmp" />
+    <EmbeddedResource Include="Images\Hearts.bmp" />
+    <EmbeddedResource Include="Images\R2.bmp" />
+    <EmbeddedResource Include="Images\R3.bmp" />
+    <EmbeddedResource Include="Images\R4.bmp" />
+    <EmbeddedResource Include="Images\R5.bmp" />
+    <EmbeddedResource Include="Images\R6.bmp" />
+    <EmbeddedResource Include="Images\R7.bmp" />
+    <EmbeddedResource Include="Images\R8.bmp" />
+    <EmbeddedResource Include="Images\R9.bmp" />
+    <EmbeddedResource Include="Images\RA.bmp" />
+    <EmbeddedResource Include="Images\RJ.bmp" />
+    <EmbeddedResource Include="Images\RK.bmp" />
+    <EmbeddedResource Include="Images\RQ.bmp" />
+    <EmbeddedResource Include="Images\Spades.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\B6.bmp" />
+    <EmbeddedResource Include="Images\BT.bmp" />
+    <EmbeddedResource Include="Images\RT.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
