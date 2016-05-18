@@ -59,6 +59,20 @@ namespace SolveFreeCell
             }
             return false;
         }
+        public int Rank
+        {
+            get
+            {
+                return m_card & 0x0f;
+            }
+        }
+        public int Suit
+        {
+            get
+            {
+                return m_card & 0xF0;
+            }
+        }
 
         private void Populate()
         {
