@@ -49,6 +49,16 @@ namespace SolveFreeCell
             }
             m_card = (Byte)(suit * 16 + rank);
         }
+        public bool IsBlack()
+        {
+            switch(m_card & 0xf0)
+            {
+                case 0x00:
+                case 0x30:
+                    return true;
+            }
+            return false;
+        }
 
         private void Populate()
         {

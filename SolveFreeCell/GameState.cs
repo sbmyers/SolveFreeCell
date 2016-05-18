@@ -30,6 +30,33 @@ namespace SolveFreeCell
         {
             m_Columns[col].Push(card);
         }
+        private Card GetCard(Position at)
+        {
+            switch (at)
+            {
+                case Position.col1: return m_Columns[0].ElementAtOrDefault(0);
+                case Position.col2: return m_Columns[1].ElementAtOrDefault(0);
+                case Position.col3: return m_Columns[2].ElementAtOrDefault(0);
+                case Position.col4: return m_Columns[3].ElementAtOrDefault(0);
+                case Position.col5: return m_Columns[4].ElementAtOrDefault(0);
+                case Position.col6: return m_Columns[5].ElementAtOrDefault(0);
+                case Position.col7: return m_Columns[6].ElementAtOrDefault(0);
+                case Position.col8: return m_Columns[7].ElementAtOrDefault(0);
+                case Position.ace1: return m_Aces[0];
+                case Position.ace2: return m_Aces[1];
+                case Position.ace3: return m_Aces[2];
+                case Position.ace4: return m_Aces[3];
+                case Position.free1: return m_Free[0];
+                case Position.free2: return m_Free[1];
+                case Position.free3: return m_Free[2];
+                case Position.free4: return m_Free[3];
+            }
+            return null;
+        }
+        private bool IsLegal(Position from, Position to)
+        {
+            return false;
+        }
         public GameState(Image rawImg)
         {
             m_Columns = InitializeArray<Stack<Card>>(8);
