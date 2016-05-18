@@ -20,6 +20,7 @@ namespace SolveFreeCell
         private Stack<Card>[] m_Columns;
         private Card[] m_Aces = new Card[4];
         private Card[] m_Free = new Card[4];
+        private int m_TotalMoves = 0;
         public GameState()
         {
             m_Columns = InitializeArray<Stack<Card>>(8);
@@ -91,6 +92,52 @@ namespace SolveFreeCell
                 }
                 Console.WriteLine();
             }
+        }
+        public static GameState operator +(GameState oldState,Move move)
+        {
+            oldState.m_TotalMoves++;
+            Card temp = null;
+            switch (move.From)
+            {
+                case Position.col1: case Position.col2: case Position.col3: case Position.col4:
+                case Position.col5: case Position.col6: case Position.col7: case Position.col8:
+                    temp = oldState.m_Columns[(int)move.From].Pop();
+                    break;
+                case Position.ace1: case Position.ace2: case Position.ace3: case Position.ace4:
+                    {
+                        int index = (int)move.From - (int)Position.ace1;
+                        temp = oldState.m_Aces[index];
+                        oldState.m_Aces[index] = new Card();
+                    }
+                    break;
+                case Position.free1: case Position.free2: case Position.free3: case Position.free4:
+                    {
+                        int index = (int)move.From - (int)Position.free1;
+                        temp = oldState.m_Free[index];
+                        oldState.m_Free[index] = new Card();
+                    }
+                    break;
+            }
+            switch (move.To)
+            {
+                case Position.col1: case Position.col2: case Position.col3: case Position.col4:
+                case Position.col5: case Position.col6: case Position.col7: case Position.col8:
+                    oldState.m_Columns[(int)move.To].Push(temp);
+                    break;
+                case Position.ace1: case Position.ace2: case Position.ace3: case Position.ace4:
+                    {
+                        int index = (int)move.To - (int)Position.ace1;
+                        oldState.m_Aces[index] = temp;
+                    }
+                    break;
+                case Position.free1: case Position.free2: case Position.free3: case Position.free4:
+                    {
+                        int index = (int)move.To - (int)Position.free1;
+                        oldState.m_Free[index] = temp;
+                    }
+                    break;
+            }
+            return oldState;
         }
     }
 }
