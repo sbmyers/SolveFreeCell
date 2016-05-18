@@ -21,6 +21,7 @@ namespace SolveFreeCell
         private Card[] m_Aces = new Card[4];
         private Card[] m_Free = new Card[4];
         private int m_TotalMoves = 0;
+        private Stack<Move> m_History = new Stack<Move>();
         public GameState()
         {
             m_Columns = InitializeArray<Stack<Card>>(8);
@@ -92,6 +93,10 @@ namespace SolveFreeCell
                 }
                 Console.WriteLine();
             }
+            for(int row = 1; row <= m_History.Count; ++row)
+            {
+                Console.WriteLine("History[{1}] {0}", m_History.ElementAt(m_History.Count - row), row);
+            }
         }
         public static GameState operator +(GameState oldState,Move move)
         {
@@ -137,6 +142,7 @@ namespace SolveFreeCell
                     }
                     break;
             }
+            oldState.m_History.Push(move);
             return oldState;
         }
     }
