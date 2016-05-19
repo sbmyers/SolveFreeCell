@@ -20,8 +20,7 @@ namespace SolveFreeCell
         private Stack<Card>[] m_Columns;
         private Card[] m_Aces = new Card[4];
         private Card[] m_Free = new Card[4];
-        private int m_TotalMoves = 0;
-        private Stack<Move> m_History = new Stack<Move>();
+        private Stack<GameMove> m_History = new Stack<GameMove>();
         public GameState()
         {
             m_Columns = InitializeArray<Stack<Card>>(8);
@@ -30,7 +29,7 @@ namespace SolveFreeCell
         {
             m_Columns[col].Push(card);
         }
-        private Card GetCard(Position at)
+        public Card GetCard(Position at)
         {
             switch (at)
             {
@@ -50,11 +49,64 @@ namespace SolveFreeCell
                 case Position.free2: return m_Free[1];
                 case Position.free3: return m_Free[2];
                 case Position.free4: return m_Free[3];
+                case Position.free:
+                    // return empty if any 1 of the 4 free cells is empty
+                    foreach(Card f in m_Free)
+                    {
+                        if (f.IsEmpty()) return f;
+                    }
+                    // they're all occupied, just return the 1st
+                    return m_Free[0];
             }
             return null;
         }
-        private bool IsLegal(Position from, Position to)
+        public bool IsLegal(Position from, Position to)
         {
+            if (from == to) return false;
+            Card first = GetCard(from);
+            if (first.IsEmpty()) return false;
+            Card second = GetCard(to);
+            switch (to)
+            {
+                case Position.free:
+                    return second.IsEmpty();
+                case Position.ace1:
+                case Position.ace2:
+                case Position.ace3:
+                case Position.ace4:
+                    if (second.IsEmpty())
+                    {
+                        return first.Rank == 0;
+                    }
+                    if(first.Suit != second.Suit)
+                    {
+                        return false;
+                    }
+                    if(first.Rank == (second.Rank + 1)){
+                        return true;
+                    }
+                    return false;
+                case Position.col1:
+                case Position.col2:
+                case Position.col3:
+                case Position.col4:
+                case Position.col5:
+                case Position.col6:
+                case Position.col7:
+                case Position.col8:
+                    if (second.IsEmpty()) return true;
+                    if(first.IsBlack() != second.IsBlack())
+                    {
+                        return ((first.Rank+1) == second.Rank);
+                    }
+                    break;
+                case Position.free1:
+                case Position.free2:
+                case Position.free3:
+                case Position.free4:
+                    Console.WriteLine("oops");
+                    break;
+            }
             return false;
         }
         public GameState(Image rawImg)
@@ -125,9 +177,8 @@ namespace SolveFreeCell
                 Console.WriteLine("History[{1}] {0}", m_History.ElementAt(m_History.Count - row), row);
             }
         }
-        public static GameState operator +(GameState oldState,Move move)
+        public static GameState operator +(GameState oldState,GameMove move)
         {
-            oldState.m_TotalMoves++;
             Card temp = null;
             switch (move.From)
             {
@@ -162,10 +213,16 @@ namespace SolveFreeCell
                         oldState.m_Aces[index] = temp;
                     }
                     break;
-                case Position.free1: case Position.free2: case Position.free3: case Position.free4:
+                case Position.free:
                     {
-                        int index = (int)move.To - (int)Position.free1;
-                        oldState.m_Free[index] = temp;
+                        for(int i = 0; i < 4; ++i)
+                        {
+                            if (oldState.m_Free[i].IsEmpty())
+                            {
+                                oldState.m_Free[i] = temp;
+                                break;
+                            }
+                        }
                     }
                     break;
             }

@@ -9,9 +9,9 @@ namespace SolveFreeCell
     enum Position
     {
         col1=0, col2, col3, col4, col5, col6, col7, col8,
-        ace1, ace2, ace3, ace4, free1, free2, free3, free4,        
+        ace1, ace2, ace3, ace4, free1, free2, free3, free4, free,       
     }
-    class Move
+    class GameMove
     {
         private Card m_Card;
         private Position m_From;
@@ -30,7 +30,7 @@ namespace SolveFreeCell
             }
         }
         private Position m_To;
-        public Move(Card card, Position from, Position to)
+        public GameMove(Card card, Position from, Position to)
         {
             m_Card = card;
             m_From = from;
@@ -40,6 +40,11 @@ namespace SolveFreeCell
         {
             return m_Card.ToString() + " From " + m_From.ToString() + " to " + m_To;
         }
-
+        public static Position[] StartFrom = {
+            Position.free1, Position.free2, Position.free3, Position.free4,
+            Position.col1, Position.col2, Position.col3, Position.col4, Position.col5, Position.col6, Position.col7, Position.col8, };
+        public static Position[] FinishAt = {
+            Position.ace1, Position.ace2, Position.ace3, Position.ace4, Position.free, 
+            Position.col1, Position.col2, Position.col3, Position.col4, Position.col5, Position.col6, Position.col7, Position.col8, };
     }
 }

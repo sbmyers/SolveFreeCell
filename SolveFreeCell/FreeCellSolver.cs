@@ -60,14 +60,16 @@ namespace SolveFreeCell
             pictureBox1.Image = img;
             m_Game = new GameState(img);
             m_Game.Dump();
-            Move m = new Move(new Card(1, 1), Position.col1, Position.col2);
-            Console.WriteLine("Move {0}", m);
-            GameState g = m_Game + m;
-            g.Dump();
-            m = new Move(new Card(1, 1), Position.col1, Position.free1);
-            Console.WriteLine("Move {0}", m);
-            g = g + m;
-            g.Dump();
+            foreach(Position from in GameMove.StartFrom)
+            {
+                foreach(Position to in GameMove.FinishAt)
+                {
+                    if (m_Game.IsLegal(from, to))
+                    {
+                        Console.WriteLine("{0}", new GameMove(m_Game.GetCard(from), from, to));
+                    }
+                }
+            }
         }
 
     }

@@ -55,7 +55,7 @@
       <DependentUpon>FreeCellSolver.cs</DependentUpon>
     </Compile>
     <Compile Include="GameState.cs" />
-    <Compile Include="Move.cs" />
+    <Compile Include="GameMove.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FreeCellSolver.resx">

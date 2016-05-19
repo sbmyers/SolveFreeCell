@@ -59,6 +59,20 @@ namespace SolveFreeCell
             }
             return false;
         }
+        public bool IsEmpty()
+        {
+            switch(m_card & 0xf0)
+            {
+                case 0x00:
+                case 0x10:
+                case 0x20:
+                case 0x30:
+                    break;
+                default:
+                    return true;
+            }
+            return Rank >= 13;
+        }
         public int Rank
         {
             get
