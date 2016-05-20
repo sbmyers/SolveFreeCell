@@ -229,5 +229,24 @@ namespace SolveFreeCell
             oldState.m_History.Push(move);
             return oldState;
         }
+        public bool IsWinner()
+        {
+            for (int col = 0; col < 8; ++col)
+            {
+                if (m_Columns[col].Count > 1)
+                {
+                    int prevCard = m_Columns[col].ElementAt(0).Rank;
+                    for (int i = 1; i < m_Columns[col].Count; ++i)
+                    {
+                        if((prevCard + 1) != m_Columns[col].ElementAt(i).Rank)
+                        {
+                            return false;
+                        }
+                        prevCard++;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }
