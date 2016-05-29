@@ -33,6 +33,7 @@
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.solveWorker = new System.ComponentModel.BackgroundWorker();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -79,6 +80,14 @@
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
+            // solveWorker
+            // 
+            this.solveWorker.WorkerReportsProgress = true;
+            this.solveWorker.WorkerSupportsCancellation = true;
+            this.solveWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.solveWorker_DoWork);
+            this.solveWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.solveWorker_ProgressChanged);
+            this.solveWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.solveWorker_RunWorkerCompleted);
+            // 
             // FreeCellSolver
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -106,5 +115,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
+        private System.ComponentModel.BackgroundWorker solveWorker;
     }
 }

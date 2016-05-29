@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 
 namespace SolveFreeCell
 {
@@ -65,6 +66,11 @@ namespace SolveFreeCell
             if (from == to) return false;
             Card first = GetCard(from);
             if (first.IsEmpty()) return false;
+            if(first.Rank == 0)
+            {
+                if (to != Position.ace) return false;
+                return true;
+            }
             Card second = GetCard(to);
             switch (to)
             {
@@ -109,6 +115,13 @@ namespace SolveFreeCell
             }
             return false;
         }
+        public GameState(GameState orig)
+        {
+            this.m_Columns = orig.m_Columns;
+            this.m_Aces = orig.m_Aces;
+            this.m_Free = orig.m_Free;
+            this.m_History = orig.m_History;
+        }
         public GameState(Image rawImg)
         {
             m_Columns = InitializeArray<Stack<Card>>(8);
@@ -145,6 +158,38 @@ namespace SolveFreeCell
             }
 
         }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("{0} {1} {2} {3}|{4} {5} {6} {7}\n",
+                m_Aces[0], m_Aces[1], m_Aces[2], m_Aces[3],
+                m_Free[0], m_Free[1], m_Free[2], m_Free[3]);
+            sb.AppendLine("__ __ __ __|__ __ __ __");
+            int nMaxRows = 0;
+            for (int col = 0; col < 8; ++col)
+            {
+                nMaxRows = Math.Max(nMaxRows, m_Columns[col].Count);
+            }
+            for (int row = 0; row < nMaxRows; ++row)
+            {
+                for (int col = 0; col < 8; ++col)
+                {
+                    if (row < m_Columns[col].Count)
+                    {
+                        int index = m_Columns[col].Count - 1 - row;
+                        sb.AppendFormat("{0} ", m_Columns[col].ElementAt(index).ToString());
+                    }
+                    else
+                    {
+                        sb.AppendFormat("   ");
+                    }
+                }
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
+        }
         public void Dump()
         {
             Console.WriteLine("{0} {1} {2} {3}|{4} {5} {6} {7}",
@@ -172,32 +217,65 @@ namespace SolveFreeCell
                 }
                 Console.WriteLine();
             }
-            for(int row = 1; row <= m_History.Count; ++row)
+            //for(int row = 1; row <= m_History.Count; ++row)
+            //{
+            //    Console.WriteLine("History[{1}] {0}", m_History.ElementAt(m_History.Count - row), row);
+            //}
+        }
+        public override bool Equals(object obj)
+        {
+            GameState other = obj as GameState;
+            int freeCount = 0;
+            int colCount = 0;
+            for(int i = 0; i < 4; ++i)
             {
-                Console.WriteLine("History[{1}] {0}", m_History.ElementAt(m_History.Count - row), row);
+                for(int j = 0; j < 4; ++j)
+                {
+                    if(m_Free[i] == other.m_Free[j])
+                    {
+                        freeCount++;
+                        break;
+                    }
+                }
             }
+            if (freeCount != 4) return false;
+            for(int i = 0; i < 8; ++i)
+            {
+                if (colCount != i) return false;
+                for(int j = 0; j < 8; ++j)
+                {
+                    if (m_Columns[i].Equals(other.m_Columns[j]))
+                    {
+                        colCount++;
+                        break;
+                    }
+                }
+            }
+            if (colCount != 8) return false;
+            return true;
         }
         public static GameState operator +(GameState oldState,GameMove move)
         {
+            GameState nextState = new GameState(oldState);
             Card temp = null;
             switch (move.From)
             {
                 case Position.col1: case Position.col2: case Position.col3: case Position.col4:
                 case Position.col5: case Position.col6: case Position.col7: case Position.col8:
-                    temp = oldState.m_Columns[(int)move.From].Pop();
+                    temp = nextState.m_Columns[(int)move.From].Pop();
                     break;
                 case Position.ace1: case Position.ace2: case Position.ace3: case Position.ace4:
                     {
                         int index = (int)move.From - (int)Position.ace1;
-                        temp = oldState.m_Aces[index];
-                        oldState.m_Aces[index] = new Card();
+                        temp = nextState.m_Aces[index];
+                        nextState.m_Aces[index] = new Card();
                     }
                     break;
                 case Position.free1: case Position.free2: case Position.free3: case Position.free4:
                     {
                         int index = (int)move.From - (int)Position.free1;
-                        temp = oldState.m_Free[index];
-                        oldState.m_Free[index] = new Card();
+                        temp = nextState.m_Free[index];
+                        nextState.m_Free[index] = new Card();
                     }
                     break;
             }
@@ -205,29 +283,53 @@ namespace SolveFreeCell
             {
                 case Position.col1: case Position.col2: case Position.col3: case Position.col4:
                 case Position.col5: case Position.col6: case Position.col7: case Position.col8:
-                    oldState.m_Columns[(int)move.To].Push(temp);
+                    nextState.m_Columns[(int)move.To].Push(temp);
                     break;
                 case Position.ace1: case Position.ace2: case Position.ace3: case Position.ace4:
+                case Position.ace:
                     {
-                        int index = (int)move.To - (int)Position.ace1;
-                        oldState.m_Aces[index] = temp;
+                        if(temp.Rank == 0)
+                        {
+                            for(int col = 0; col < 4; ++col)
+                            {
+                                if (nextState.m_Aces[col].IsEmpty())
+                                {
+                                    nextState.m_Aces[col] = temp;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for (int col = 0; col < 4; ++col)
+                            {
+                                if (nextState.m_Aces[col].Suit == temp.Suit)
+                                {
+                                    nextState.m_Aces[col] = temp;
+                                    break;
+                                }
+                            }
+                        }
                     }
                     break;
                 case Position.free:
                     {
                         for(int i = 0; i < 4; ++i)
                         {
-                            if (oldState.m_Free[i].IsEmpty())
+                            if (nextState.m_Free[i].IsEmpty())
                             {
-                                oldState.m_Free[i] = temp;
+                                nextState.m_Free[i] = temp;
                                 break;
                             }
                         }
                     }
                     break;
+                default:
+                    Console.WriteLine("Illegal move");
+                    break;
             }
-            oldState.m_History.Push(move);
-            return oldState;
+            nextState.m_History.Push(move);
+            return nextState;
         }
         public bool IsWinner()
         {
